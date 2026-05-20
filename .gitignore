@@ -8,6 +8,9 @@ helix-importer-ui
 *.bak
 .idea
 
+# Cursor project MCP config (local only; use ~/.cursor/mcp.json for Easy MCP)
+.cursor/mcp.json
+
 # Ensure these files are tracked
 !CLAUDE.md
 !AGENTS.md
