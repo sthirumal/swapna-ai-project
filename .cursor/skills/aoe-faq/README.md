@@ -1,6 +1,6 @@
 # AOE FAQ — Cursor project skill
 
-Internal-only FAQ for **AOE / EMA / EDS** engagement questions. The agent follows **`SKILL.md`**. Answers must match the **approved FAQ** (see source of truth below).
+Internal-only FAQ for **AOE / EMA / EDS** engagement questions. The agent follows **`SKILL.md`**. Answers must match the **approved FAQ** (see source of truth below). **Order of operations:** try **wiki MCP first** for every FAQ question; if MCP fails, use **`aoe-faq.md`** and say so (see `SKILL.md` → *Retrieval order*).
 
 ---
 
@@ -49,10 +49,10 @@ Do **not** invent FAQ answers in git—**wiki first**, then sync.
 ## How to use in Cursor
 
 1. Open this repository in Cursor.
-2. Enable **Easy MCP** and the **Adobe Wiki / Confluence** MCP so the agent can read the live wiki when needed (see below).
+2. Enable **Easy MCP** and the **Adobe Wiki / Confluence** MCP so the agent can read the live wiki (see below).
 3. In chat, use **`@aoe-faq`** (or ask the agent to follow the **aoe-faq** project skill).
-4. **With wiki MCP:** Prefer fetching the [AOE FAQ](https://wiki.corp.adobe.com/spaces/AEMSites/pages/3835056848/AOE+FAQ) page for the latest text when answering.
-5. **Without wiki MCP:** Use `aoe-faq.md`; note it may be **stale** until the next sync.
+4. **Answering FAQ questions:** The agent should **always try wiki MCP first** (`get_wiki_content` on the [AOE FAQ](https://wiki.corp.adobe.com/spaces/AEMSites/pages/3835056848/AOE+FAQ) URL). **If MCP is missing, errors, times out, or auth fails**, it should **fall back to `aoe-faq.md`** and **tell you** the answer is from the local file and may be stale or out of sync with Confluence.
+5. **If you see that fallback notice:** Fix MCP in Cursor settings (see below) or confirm on Confluence; optionally ask for a wiki sync of `aoe-faq.md` when the wiki was updated.
 
 ---
 

@@ -6,10 +6,11 @@ description: >-
   the approved FAQ corpus on Confluence (canonical) or the synced aoe-faq.md in this folder. Use when the
   user asks about AOE fit, timeline, team size, GitHub handover, partner vs Adobe scope, self-service vs
   Adobe-led migration, credits, sales comp, templates/block variants, search in scope, custom blocks,
-  methodology, or related acronyms (AOE, EMA, EDS). Prefer live wiki content when Adobe Wiki MCP is
-  available; otherwise read aoe-faq.md and note possible staleness. When the user asks to sync the wiki
-  to the local repo (e.g. update aoe-faq.md if the wiki changed), use wiki MCP only (Easy MCP credentials in Cursor).
-  Do not invent commercial or scope claims beyond the approved FAQ.
+  methodology, or related acronyms (AOE, EMA, EDS). Always try Adobe Wiki / Confluence MCP first
+  (get_wiki_content on the canonical AOE FAQ URL); on any MCP failure (unavailable, error, timeout, auth),
+  fall back to aoe-faq.md and tell the user answers are from the local copy and may be stale. When the user
+  asks to sync the wiki to the local repo (e.g. update aoe-faq.md if the wiki changed), use wiki MCP only
+  (Easy MCP credentials in Cursor). Do not invent commercial or scope claims beyond the approved FAQ.
 ---
 
 # AOE FAQ (internal)
@@ -20,16 +21,24 @@ description: >-
 - **Synced copy:** `aoe-faq.md` in this folder is updated **from** the wiki for Cursor, diffs, and offline use. It is **not** the master document.
 - **Repo sync (maintainers):** When the user asks to refer to the wiki and sync the local repo (e.g. *“please refer the wiki and sync `aoe-faq.md` if there are any changes”*): use **Adobe Wiki / Confluence MCP** with the canonical [AOE FAQ](https://wiki.corp.adobe.com/spaces/AEMSites/pages/3835056848/AOE+FAQ) URL, compare to `.cursor/skills/aoe-faq/aoe-faq.md`, and **update that file only if content differs** (normalize to clean Markdown). Uses Cursor’s wiki MCP configuration (`mcp.json` / Easy MCP). After editing, remind them to review the diff and commit or PR.
 
+## Retrieval order (mandatory)
+
+For **every** FAQ-style question (not only when the user says “check the wiki”):
+
+1. **First:** Call **Adobe Wiki / Confluence MCP** (e.g. `get_wiki_content`) with the canonical FAQ URL: [AOE FAQ — AEMSites](https://wiki.corp.adobe.com/spaces/AEMSites/pages/3835056848/AOE+FAQ). Base the answer on that body when the call succeeds. If the returned content indicates the page is in **Draft** (or similar), mention that when answering.
+2. **Fallback:** If the tool is missing, returns an error, times out, or auth fails, read **`aoe-faq.md`** in this folder. **Tell the user explicitly** that the reply uses the **local synced file** because wiki MCP was unavailable or failed, and that content may be **stale** or differ from Confluence until MCP works or the file is re-synced.
+
+Do **not** skip step 1 when MCP tools are present in the session—attempt the fetch first unless the user only asked for a local-file operation (e.g. “diff my `aoe-faq.md`”).
+
 ## Before answering
 
-1. **If Adobe Wiki / Confluence MCP is available:** Fetch the canonical page above and base answers on that content (latest approved text).
-2. **Else:** Read `aoe-faq.md` next to this `SKILL.md`. If the user needs certainty or the wiki may have changed, say that answers come from the **last synced file** and they should confirm on Confluence or run a sync.
-3. **Match by intent**, not exact question text. Map to the closest numbered section(s).
-4. If **no section fits**, say so and suggest an AOE lead or a wiki FAQ update—do **not** extrapolate sensitive commercial, legal, or customer-specific details.
+1. Complete the **Retrieval order** steps above.
+2. **Match by intent**, not exact question text. Map to the closest FAQ section(s).
+3. If **no section fits**, say so and suggest an AOE lead or a wiki FAQ update—do **not** extrapolate sensitive commercial, legal, or customer-specific details.
 
 ## How to respond
 
-- **Stay faithful** to the wiki / synced Q&A. You may **shorten**, **restructure**, or **combine** answers if meaning stays aligned with approved text.
+- **Stay faithful** to whichever source you used (wiki after a successful MCP fetch, or `aoe-faq.md` on fallback). You may **shorten**, **restructure**, or **combine** answers if meaning stays aligned with approved text.
 - If only part of an answer applies, give the **relevant excerpt** instead of dumping the whole section.
 - Prefer **plain language** and **acronym expansion** from §24 when first using AOE, EMA, or EDS.
 - For **customer-specific** scenarios, keep replies **generic** and defer specifics to humans.
