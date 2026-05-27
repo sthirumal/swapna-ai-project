@@ -15,7 +15,7 @@ This document records **decisions from the internal team meeting** (post–[stra
 | **Canonical FAQ (master)** | **[AOE FAQ — AEMSites](https://wiki.corp.adobe.com/spaces/AEMSites/pages/3835056848/AOE+FAQ)**. All wording changes happen in Confluence first. |
 | **Repo copy** | `.cursor/skills/aoe-faq/aoe-faq.md` is **synced from the wiki** (not the editor-of-record). See `.cursor/skills/aoe-faq/README.md` for sync steps. |
 | **Skill structure reference** | Adobe Edge Delivery **docs-search** skill as a **pattern** only: [docs-search SKILL.md](https://github.com/adobe/skills/blob/main/skills/aem/edge-delivery-services/skills/docs-search/SKILL.md). |
-| **Cursor + wiki MCP** | Teammates follow **[Cursor integration with Easy MCP](https://wiki.corp.adobe.com/pages/viewpage.action?spaceKey=assetscollab&title=Cursor+integration+with+Easy+MCP)** (assetscollab wiki); summary + checklist live in `.cursor/skills/aoe-faq/README.md`. |
+| **Cursor + wiki MCP** | Teammates follow **[Cursor integration with Easy MCP](https://wiki.corp.adobe.com/pages/viewpage.action?spaceKey=assetscollab&title=Cursor+integration+with+Easy+MCP)** (assetscollab wiki); summary + checklist live in `.cursor/skills/aoe-faq/README.md`. **Slack MCP** (scopes, bot invite, tokens): [aoe-faq-slack-mcp-setup.md](aoe-faq-slack-mcp-setup.md). |
 
 ---
 
@@ -90,6 +90,7 @@ From [aoe-faq-skill-strategy.md](aoe-faq-skill-strategy.md) §0 exit criteria, a
 | Resource | URL |
 | -------- | --- |
 | Strategy (this project) | [docs/aoe-faq-skill-strategy.md](aoe-faq-skill-strategy.md) |
+| Team presentation + demo script | [docs/aoe-faq-team-presentation.md](aoe-faq-team-presentation.md) |
 | Wiki — AOE FAQ skill idea | [Idea: AOE FAQ Skill future state – any FAQ](https://wiki.corp.adobe.com/spaces/MSTeam/pages/3769377144/Idea+AOE+FAQ+Skill+future+state+-+any+FAQ) |
 | Adobe skill pattern (structure only) | [docs-search SKILL.md](https://github.com/adobe/skills/blob/main/skills/aem/edge-delivery-services/skills/docs-search/SKILL.md) |
 | Cursor + wiki (Easy MCP) | [Cursor integration with Easy MCP](https://wiki.corp.adobe.com/pages/viewpage.action?spaceKey=assetscollab&title=Cursor+integration+with+Easy+MCP) |

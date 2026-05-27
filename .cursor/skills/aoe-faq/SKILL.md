@@ -10,7 +10,9 @@ description: >-
   (get_wiki_content on the canonical AOE FAQ URL); on any MCP failure (unavailable, error, timeout, auth),
   fall back to aoe-faq.md and tell the user answers are from the local copy and may be stale. When the user
   asks to sync the wiki to the local repo (e.g. update aoe-faq.md if the wiki changed), use wiki MCP only
-  (Easy MCP credentials in Cursor). Do not invent commercial or scope claims beyond the approved FAQ.
+  (Easy MCP credentials in Cursor). When the user asks to post to Slack (e.g. #aoe-ise-internal), answer from
+  wiki first, then use Slack MCP if configured; see README and docs/aoe-faq-slack-mcp-setup.md. Do not invent
+  commercial or scope claims beyond the approved FAQ.
 ---
 
 # AOE FAQ (internal)
@@ -47,16 +49,48 @@ Do **not** skip step 1 when MCP tools are present in the session—attempt the f
 
 - **Internal use only.** Do not present answers as customer-facing legal or contractual commitments unless governance approves external wording.
 
+## Slack MCP (optional — aoe-faq project)
+
+This project may configure the [Adobe Slack MCP](https://github.com/Adobe-AIFoundations/adobe-mcp-servers) so FAQ answers can be shared in the team channel **#aoe-ise-internal** (bot app name example: `aoe-faq`). Setup: `docs/aoe-faq-slack-mcp-setup.md` and [Cursor.ai - Adobe Slack MCP Setup](https://wiki.corp.adobe.com/pages/viewpage.action?pageId=3513057951&spaceKey=BPS&title=Cursor.ai%2B-%2BAdobe%2BSlack%2BMCP%2BSetup) (BPS wiki).
+
+### When to use Slack MCP
+
+- User explicitly asks to **post**, **share**, or **send** content to Slack (for example `#aoe-ise-internal`).
+- User combines FAQ/wiki with Slack in one request (for example *“@aoe-faq … post 3 bullets to #aoe-ise-internal”*).
+
+Do **not** post to Slack without a clear user request.
+
+### Wiki + Slack workflow (mandatory order)
+
+1. Complete **Retrieval order** (wiki MCP first; `aoe-faq.md` fallback with notice).
+2. Draft the reply from approved sources only. You may shorten or bulletize for Slack; **do not** add commercial or scope claims not in the wiki/FAQ.
+3. If the wiki page is **Draft**, say so in the Slack message when posting summaries.
+4. Call **Slack MCP** `slack_post_message` with the channel ID for `#aoe-ise-internal` (resolve via `slack_list_channels` if unknown; project example channel ID is documented in `docs/aoe-faq-slack-mcp-setup.md`).
+5. Confirm to the user with the posted text and a Slack permalink when the API returns success.
+6. If Slack fails (`not_in_channel`, `missing_scope`), explain the fix using `docs/aoe-faq-slack-mcp-setup.md` (invite bot, bot vs user scopes, reinstall).
+
+### Slack message guidelines
+
+- **Internal team** tone; no customer PII or deal-specific terms.
+- Prefer short bullets for FAQ summaries; include the **Confluence source URL** when posting wiki-derived content.
+- Optional footer: *Ask @aoe-faq in Cursor for full approved FAQ wording.*
+- Simple announcements (for example team sync) may be posted as-is when the user requests—no wiki fetch required unless they also ask for FAQ content.
+
+### Slack-only requests
+
+If the user only asks to post a message (no FAQ question), use Slack MCP only—do not fabricate FAQ content.
+
 ## Out of scope for this skill
 
 - Step-by-step **block authoring** or **site code** (use project Edge Delivery patterns and official `aem.live` docs).
 - **Customer identifiers**, deal-specific pricing, or terms not in the FAQ.
-- **Easy MCP / Cursor setup** — point people to `.cursor/skills/aoe-faq/README.md` and [Cursor integration with Easy MCP](https://wiki.corp.adobe.com/pages/viewpage.action?spaceKey=assetscollab&title=Cursor+integration+with+Easy+MCP).
+- **Easy MCP / Cursor / Slack app setup** — point people to `.cursor/skills/aoe-faq/README.md`, [Cursor integration with Easy MCP](https://wiki.corp.adobe.com/pages/viewpage.action?spaceKey=assetscollab&title=Cursor+integration+with+Easy+MCP), and `docs/aoe-faq-slack-mcp-setup.md`.
 
 ## Related project docs
 
 - Strategy: `docs/aoe-faq-skill-strategy.md`
 - Status / next steps: `docs/aoe-faq-implementation-status-and-next-steps.md`
+- Slack MCP setup (aoe-faq project): `docs/aoe-faq-slack-mcp-setup.md`
 
 ## Pattern reference (structure only)
 
