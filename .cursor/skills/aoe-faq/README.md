@@ -1,6 +1,8 @@
 # AOE FAQ — Cursor project skill
 
-Internal-only FAQ for **AOE / EMA / EDS** engagement questions. The agent follows **`SKILL.md`**. Answers must match the **approved FAQ** (see source of truth below).
+Internal-only FAQ for **AOE / EMA / EDS** engagement questions. The agent follows **`SKILL.md`**. Answers must match the **approved FAQ** (see source of truth below). **Order of operations:** try **wiki MCP first** for every FAQ question; if MCP fails, use **`aoe-faq.md`** and say so (see `SKILL.md` → *Retrieval order*).
+
+This project also supports **Slack MCP** (optional): share FAQ summaries or team messages in **#aoe-ise-internal** via the `aoe-faq` Slack app. See [Slack MCP setup](#slack-mcp-aoe-faq-project) below.
 
 ---
 
@@ -49,10 +51,51 @@ Do **not** invent FAQ answers in git—**wiki first**, then sync.
 ## How to use in Cursor
 
 1. Open this repository in Cursor.
-2. Enable **Easy MCP** and the **Adobe Wiki / Confluence** MCP so the agent can read the live wiki when needed (see below).
+2. Enable **Easy MCP** and these MCP servers (as needed):
+   - **Adobe Wiki / Confluence** — read the live FAQ (required for wiki-first answers).
+   - **Slack** — post to **#aoe-ise-internal** (optional; see [Slack MCP](#slack-mcp-aoe-faq-project)).
 3. In chat, use **`@aoe-faq`** (or ask the agent to follow the **aoe-faq** project skill).
-4. **With wiki MCP:** Prefer fetching the [AOE FAQ](https://wiki.corp.adobe.com/spaces/AEMSites/pages/3835056848/AOE+FAQ) page for the latest text when answering.
-5. **Without wiki MCP:** Use `aoe-faq.md`; note it may be **stale** until the next sync.
+4. **Answering FAQ questions:** The agent should **always try wiki MCP first** (`get_wiki_content` on the [AOE FAQ](https://wiki.corp.adobe.com/spaces/AEMSites/pages/3835056848/AOE+FAQ) URL). **If MCP is missing, errors, times out, or auth fails**, it should **fall back to `aoe-faq.md`** and **tell you** the answer is from the local file and may be stale or out of sync with Confluence.
+5. **If you see that fallback notice:** Fix MCP in Cursor settings (see below) or confirm on Confluence; optionally ask for a wiki sync of `aoe-faq.md` when the wiki was updated.
+6. **Post to Slack:** Ask in the same message when you want a channel post (examples below). The agent answers from wiki first, then posts via Slack MCP.
+
+### Example prompts
+
+| Goal | Example |
+| ---- | ------- |
+| FAQ only | `@aoe-faq Does Franklin have dev/staging/prod environments?` |
+| Wiki + Slack | `@aoe-faq Answer from wiki about partner vs AOE scope, post 3 bullets to #aoe-ise-internal` |
+| Slack only | `Post to #aoe-ise-internal: Team sync in 10 minutes` |
+
+---
+
+## Slack MCP (aoe-faq project)
+
+Share **approved FAQ summaries** or **internal announcements** in **#aoe-ise-internal** using the Adobe Slack MCP server and the **`aoe-faq`** Slack app (configured per teammate).
+
+| Role | Location |
+| ---- | -------- |
+| **Project setup guide (scopes, bot invite, tokens)** | [`docs/aoe-faq-slack-mcp-setup.md`](../../../docs/aoe-faq-slack-mcp-setup.md) |
+| **Adobe canonical Slack MCP wiki** | [Cursor.ai - Adobe Slack MCP Setup](https://wiki.corp.adobe.com/pages/viewpage.action?pageId=3513057951&spaceKey=BPS&title=Cursor.ai%2B-%2BAdobe%2BSlack%2BMCP%2BSetup) (BPS) |
+| **Easy MCP + Cursor** | [Cursor integration with Easy MCP](https://wiki.corp.adobe.com/pages/viewpage.action?spaceKey=assetscollab&title=Cursor+integration+with+Easy+MCP) |
+| **Agent rules (wiki then Slack)** | `SKILL.md` → *Slack MCP* |
+
+### Setup checklist (summary)
+
+Full steps are in **`docs/aoe-faq-slack-mcp-setup.md`**. At minimum:
+
+1. Build or run the Slack MCP server ([adobe-mcp-servers](https://github.com/Adobe-AIFoundations/adobe-mcp-servers)) via Easy MCP / Docker or Node.
+2. Create a Slack app; set **bot** scopes (`channels:history`, `channels:read`, `chat:write`, `reactions:write`, `users:read`) and **user** scope `search:read`.
+3. Install to workspace (or submit admin request; wait for **Slackbot** approved/cancelled message).
+4. Invite the bot: `/invite @aoe-faq` in **#aoe-ise-internal**.
+5. Set `SLACK_BOT_TOKEN`, `SLACK_USER_TOKEN`, `SLACK_TEAM_ID` in your local env (see project `.cursor/mcp.json` for Docker env-file path).
+6. Verify: post a test message and fetch channel history.
+
+### Governance
+
+- Slack posts are **internal team** use only; wording must match **wiki/FAQ** when sharing FAQ content.
+- Do not post customer PII, deal terms, or content not in approved sources.
+- If Confluence returns **Draft**, mention that in Slack when sharing summaries.
 
 ---
 
@@ -81,7 +124,7 @@ If your org changes MCP names or install paths, treat the **assetscollab** wiki 
 
 | File         | Purpose                                                                   |
 | ------------ | ------------------------------------------------------------------------- |
-| `SKILL.md`   | When to use the skill, wiki vs `aoe-faq.md`, intent matching, boundaries. |
+| `SKILL.md`   | When to use the skill, wiki vs `aoe-faq.md`, Slack posting rules, boundaries. |
 | `aoe-faq.md` | **Synced** markdown mirror of the wiki FAQ (not the system of record).    |
 
 ---
@@ -89,4 +132,5 @@ If your org changes MCP names or install paths, treat the **assetscollab** wiki 
 ## Related strategy / requirements
 
 - [Idea: AOE FAQ Skill future state – any FAQ](https://wiki.corp.adobe.com/spaces/MSTeam/pages/3769377144/Idea+AOE+FAQ+Skill+future+state+-+any+FAQ) (MSTeam wiki)
-- Project docs: `docs/aoe-faq-skill-strategy.md`, `docs/aoe-faq-implementation-status-and-next-steps.md`
+- Project docs: `docs/aoe-faq-skill-strategy.md`, `docs/aoe-faq-implementation-status-and-next-steps.md`, `docs/aoe-faq-slack-mcp-setup.md`
+- Team presentation (slides + live demo script): `docs/aoe-faq-team-presentation.md`
